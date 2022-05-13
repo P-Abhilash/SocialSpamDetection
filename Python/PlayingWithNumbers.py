@@ -4,8 +4,8 @@ from sklearn.metrics import accuracy_score
 
 print('##### Data Info ##### ')
 
-df_bots = pd.read_csv('/content/Twitter-Bot-Detection/CSVs/bots_data.csv', sep=",", encoding='latin1')
-df_nonbots = pd.read_csv('/content/Twitter-Bot-Detection/CSVs/nonbots_data.csv', sep=",", encoding='latin1')
+df_bots = pd.read_csv('/content/SocialSpamDetection/CSVs/bots_data.csv', sep=",", encoding='latin1')
+df_nonbots = pd.read_csv('/content/SocialSpamDetection/CSVs/nonbots_data.csv', sep=",", encoding='latin1')
 # print(df_bots.head(5))
 
 df = pd.concat([df_bots, df_nonbots], ignore_index=True)
@@ -13,10 +13,10 @@ df.fillna('?', inplace=True)
 print('total: {}'.format(df.shape))
 
 # add a column 'nb_guess' with a Naive Bayes classification of the description
-df['nb_guess'] = pd.read_csv('/content/Twitter-Bot-Detection/CSVs/nb_guess.csv', header=None)
+df['nb_guess'] = pd.read_csv('/content/SocialSpamDetection/CSVs/nb_guess.csv', header=None)
 
 # add a column 'svm_guess' with a SVM classification of the description
-df['svm_guess'] = pd.read_csv('/content/Twitter-Bot-Detection/CSVs/svm_guess.csv', header=None)
+df['svm_guess'] = pd.read_csv('/content/SocialSpamDetection/CSVs/svm_guess.csv', header=None)
 
 # removing unnecessary columns. keeping only numbers for this part
 df = df.drop(['id', 'id_str', 'url', 'default_profile', 'default_profile_image', 'screen_name', 'location',
@@ -28,7 +28,7 @@ split = np.random.rand(len(df)) < 0.8
 train_df = df[split]
 test_df = df[~split]
 
-print('train: {}, test: {}'.format(train_df.shape, test_df.shape))
+# print('train: {}, test: {}'.format(train_df.shape, test_df.shape))
 
 ## Random Forests
 print('\n##### Random Forests #####')
@@ -69,6 +69,7 @@ print()
 ## Linear Regression doesnt make sense because well, either bot or not.
 
 ## Logistic Regression
+
 print('\n##### Logistic Regression #####')
 from sklearn.linear_model import LogisticRegression
 
@@ -76,7 +77,7 @@ X = train_df.drop('bot', 1)
 y = train_df['bot']
 
     # turn down tolerance for short training time
-clf_l1_LR = LogisticRegression(C=C, penalty='l1', tol=0.01, solver='liblinear')
+clf_l1_LR = LogisticRegression( penalty='l1', tol=0.01, solver='liblinear')
 clf_l1_LR.fit(X, y)
 
 print('accuracy on training data: %.4f' % clf_l1_LR.score(X, y))
@@ -110,8 +111,6 @@ print('Multinomial NB accuracy on test data: {}'.format(clf_MNB_score_test))
 print()
 
 
-
-
 from matplotlib import pyplot as plt
 from sklearn import metrics
 
@@ -130,3 +129,5 @@ plt.ylabel('True positive rate')
 plt.title('ROC curve')
 plt.legend(loc='best')
 plt.show()
+
+
