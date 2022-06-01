@@ -31,7 +31,7 @@ test_df = df[~split]
 # print('train: {}, test: {}'.format(train_df.shape, test_df.shape))
 
 ## Random Forests
-print('\n##### Random Forests #####')
+print('\n----- Random Forests -----')
 X = train_df.drop('bot', 1)
 Y = train_df['bot']
 from sklearn.ensemble import RandomForestClassifier
@@ -41,10 +41,13 @@ clf_RF.fit(X, Y)
 print('accuracy on training data: {}'.format(clf_RF.score(X, Y)))
 print('accuracy on test data: {}'.format(clf_RF.score(test_df.drop('bot', 1), test_df['bot'])))
 print()
+plot_confusion_matrix(clf_RF, X, Y)
+plt.title("RandomForestClassifier")
+
 
 ## Decision Tree
 # create the classifier
-print('\n##### Decision Trees #####')
+print('\n----- Decision Trees -----')
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import confusion_matrix, plot_confusion_matrix
 
@@ -63,14 +66,12 @@ print('accuracy on test data: {}'
       .format(accuracy_score(test_df['bot'], predict_test_dt)))
 print()
 
-# plot_confusion_matrix(clf_dt,predict_test_dt,predict_train_dt,labels=None)
-
 
 ## Linear Regression doesnt make sense because well, either bot or not.
 
 ## Logistic Regression
 
-print('\n##### Logistic Regression #####')
+print('\n----- Logistic Regression -----')
 from sklearn.linear_model import LogisticRegression
 
 X = train_df.drop('bot', 1)
@@ -85,6 +86,9 @@ print('accuracy on training data: %.4f' % clf_l1_LR.score(X, y))
 print('accuracy on test data: %.4f' % clf_l1_LR.score(test_df.drop('bot', 1), test_df['bot']))
 
 print()
+plot_confusion_matrix(clf_l1_LR, X, Y)
+plt.title("Logistic Regression")
+
 
 ## Naive Bayes - Bernoulli and Multnomial
 from sklearn.naive_bayes import BernoulliNB, MultinomialNB
@@ -103,7 +107,7 @@ clf_MNB_score_train = clf_MNB.score(X, Y)
 clf_BNB_score_test = clf_BNB.score(test_df.drop('bot', 1), test_df['bot'])
 clf_MNB_score_test = clf_MNB.score(test_df.drop('bot', 1), test_df['bot'])
 
-print('\n##### Naive Bayes #####')
+print('\n----- Naive Bayes -----')
 print('Bernoulli NB accuracy on training data: {}'.format(clf_BNB_score_train))
 print('Multinomial NB accuracy on training data: {}'.format(clf_MNB_score_train))
 print('Bernoulli NB accuracy on test data: {}'.format(clf_BNB_score_test))
@@ -129,5 +133,3 @@ plt.ylabel('True positive rate')
 plt.title('ROC curve')
 plt.legend(loc='best')
 plt.show()
-
-
